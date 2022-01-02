@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:inv_project/Screen/home_page.dart';
 
 Widget menuType(String type, String count, String image) {
   return Container(
@@ -65,7 +67,9 @@ Widget menuType(String type, String count, String image) {
             elevation: 4,
             shape: const CircleBorder(),
             child: IconButton(
-              onPressed: (){},
+              onPressed: (){
+                Get.to(() => HomePage(), arguments: type);
+              },
               icon: const Icon(Icons.chevron_right, color: Color(0xFFC53707),
               ),
             ),
