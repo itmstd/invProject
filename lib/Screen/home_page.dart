@@ -141,7 +141,7 @@ class HomePage extends StatelessWidget {
                         itemCount: data == 'Food' ? controller.mealsList.meals.length : controller.beveragesList.drinks.length,
                         itemBuilder: (context, i){
                           return GestureDetector(
-                            onTap: () => Get.to(() => DetailsPage(), arguments: data),
+                            onTap: () => Get.to(() => DetailsPage(), arguments: [data, data == 'Food' ? controller.mealsList.meals[i].idMeal : controller.beveragesList.drinks[i].idDrink]),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

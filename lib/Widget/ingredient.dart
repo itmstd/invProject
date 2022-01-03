@@ -5,6 +5,7 @@ import 'package:inv_project/Model/food_details.dart';
 Widget ingredientBar(
     String ingredient,
     String measurement,
+    DetailPageController controller,
     ) {
   return ingredient == "" ? SizedBox() :
   Column(children: [
@@ -23,7 +24,7 @@ Widget ingredientBar(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(ingredient, style: TextStyle(color: Colors.black),),
-            Text(measurement, style: TextStyle(color: Colors.black45),)
+            Text(measurement.contains(RegExp(r'^[0-9]')) ? "${int.parse(measurement.split(RegExp(r'[^0-9]')).first)*controller.servings.value} ${measurement.split(RegExp(r'[^a-zA-Z]')).last}" : measurement, style: TextStyle(color: Colors.black45),)
           ],),
       ],),
     Divider()

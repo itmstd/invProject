@@ -16,7 +16,7 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final DetailPageController controller = Get.put(DetailPageController());
     var data = Get.arguments;
-    if(data == 'Food'){
+    if(data[0] == 'Food'){
       controller.getFoodDetails();
     } else {
 
@@ -100,93 +100,36 @@ class DetailsPage extends StatelessWidget {
                   ),
                 ],),
                 Divider(),
-                TabBar(
+                Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  controller: controller.tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      7.0,
+                  child: Card(
+                    shadowColor: Colors.grey.shade200,
+                    elevation: 2,
+                    child: TabBar(
+                      // padding: EdgeInsets.only(left: 10, right: 10),
+                      controller: controller.tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          7.0,
+                        ),
+                        color: Color(0xFFE44F53),
+                      ),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black45,
+                      tabs: controller.myTabs,
                     ),
-                    color: Color(0xFFE44F53),
                   ),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black45,
-                  tabs: controller.myTabs,
                 ),
                 SizedBox(height: 20,),
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Ingredients For', style: TextStyle(fontWeight: FontWeight.bold),),
-                                Text('2 servings', style: TextStyle(color: Colors.black45),)
-                              ],),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: (){},
-                                  child: Icon(Icons.add, color: Colors.white, size: 13,),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Color(0xFFE44F53),
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                Text('2'),
-                                TextButton(
-                                  onPressed: (){},
-                                  child: Icon(Icons.remove, color: Colors.white, size: 13,),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Color(0xFFE44F53),
-                                    shape: CircleBorder(),
-                                  ),
-                                  // color: Color(0xFFE44F53),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        Divider(color: Colors.black38,),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Wrap(
-                              children: [
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient1, controller.foodDetails.meals[0].strMeasure1),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient2, controller.foodDetails.meals[0].strMeasure2),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient3, controller.foodDetails.meals[0].strMeasure3),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient4, controller.foodDetails.meals[0].strMeasure4),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient5, controller.foodDetails.meals[0].strMeasure5),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient6, controller.foodDetails.meals[0].strMeasure6),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient7, controller.foodDetails.meals[0].strMeasure7),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient8, controller.foodDetails.meals[0].strMeasure8),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient9, controller.foodDetails.meals[0].strMeasure9),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient10, controller.foodDetails.meals[0].strMeasure10),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient11, controller.foodDetails.meals[0].strMeasure11),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient12, controller.foodDetails.meals[0].strMeasure12),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient13, controller.foodDetails.meals[0].strMeasure13),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient14, controller.foodDetails.meals[0].strMeasure14),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient15, controller.foodDetails.meals[0].strMeasure15),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient16, controller.foodDetails.meals[0].strMeasure16),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient17, controller.foodDetails.meals[0].strMeasure17),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient18, controller.foodDetails.meals[0].strMeasure18),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient19, controller.foodDetails.meals[0].strMeasure19),
-                                ingredientBar(controller.foodDetails.meals[0].strIngredient20, controller.foodDetails.meals[0].strMeasure20),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: controller.tabController,
+                    children: [
+                      ingredientTab(controller),
+                      stepsTab(controller),
+                      nutritionTab(controller)
+                    ],
                   ),
                 )
               ],
@@ -199,5 +142,94 @@ class DetailsPage extends StatelessWidget {
         ],
       ),
     ) : Scaffold(body: Center(child: Lottie.asset('assets/lottie/fnb.json', height: 100))));
+  }
+
+  ingredientTab(DetailPageController controller){
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Ingredients For', style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text('${controller.servings} servings', style: TextStyle(color: Colors.black45),)
+                ],),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: (){controller.addServings();},
+                    child: Icon(Icons.add, color: Colors.white, size: 13,),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFFE44F53),
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  Text(controller.servings.toString()),
+                  TextButton(
+                    onPressed: (){controller.minusServings();},
+                    child: Icon(Icons.remove, color: Colors.white, size: 13,),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFFE44F53),
+                      shape: CircleBorder(),
+                    ),
+                    // color: Color(0xFFE44F53),
+                  )
+                ],
+              ),
+            ],
+          ),
+          Divider(color: Colors.black38,),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Wrap(
+                children: [
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient1, controller.foodDetails.meals[0].strMeasure1, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient2, controller.foodDetails.meals[0].strMeasure2, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient3, controller.foodDetails.meals[0].strMeasure3, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient4, controller.foodDetails.meals[0].strMeasure4, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient5, controller.foodDetails.meals[0].strMeasure5, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient6, controller.foodDetails.meals[0].strMeasure6, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient7, controller.foodDetails.meals[0].strMeasure7, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient8, controller.foodDetails.meals[0].strMeasure8, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient9, controller.foodDetails.meals[0].strMeasure9, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient10, controller.foodDetails.meals[0].strMeasure10, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient11, controller.foodDetails.meals[0].strMeasure11, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient12, controller.foodDetails.meals[0].strMeasure12, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient13, controller.foodDetails.meals[0].strMeasure13, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient14, controller.foodDetails.meals[0].strMeasure14, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient15, controller.foodDetails.meals[0].strMeasure15, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient16, controller.foodDetails.meals[0].strMeasure16, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient17, controller.foodDetails.meals[0].strMeasure17, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient18, controller.foodDetails.meals[0].strMeasure18, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient19, controller.foodDetails.meals[0].strMeasure19, controller),
+                  ingredientBar(controller.foodDetails.meals[0].strIngredient20, controller.foodDetails.meals[0].strMeasure20, controller),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  stepsTab(DetailPageController controller){
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: SingleChildScrollView(child: Text(controller.foodDetails.meals[0].strInstructions)),
+    );
+  }
+
+  nutritionTab(DetailPageController controller){
+    return Center(
+      child: Text('To be added'),
+    );
   }
 }

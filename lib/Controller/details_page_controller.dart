@@ -8,6 +8,7 @@ import 'package:inv_project/Model/food_details.dart';
 class DetailPageController extends GetxController with SingleGetTickerProviderMixin{
 
   dynamic isLoaded = false.obs;
+  dynamic servings = 1.obs;
 
   final List<Tab> myTabs = <Tab>[
     Tab(text: 'Ingredients'),
@@ -24,9 +25,23 @@ class DetailPageController extends GetxController with SingleGetTickerProviderMi
     tabController = TabController(length: 3, vsync: this);
 
   }
+
+  addServings(){
+    if(servings.value != 0) {
+      servings.value += 1;
+    }
+  }
+
+  minusServings(){
+    if(servings.value > 1) {
+      servings.value -= 1;
+    }
+  }
+
   
   getFoodDetails() async {
-    var url = Uri.parse("https://www.themealdb.com/api/json/v1/1/lookup.php?i=52959");
+    var data = Get.arguments;
+    var url = Uri.parse("https://www.themealdb.com/api/json/v1/1/lookup.php?i=${data[1]}");
     var response = await http.get(url);
     if(response.statusCode == 200){
       foodDetails = FoodDetails.fromJson(json.decode(response.body));
