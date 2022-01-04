@@ -17,9 +17,11 @@ class DetailsPage extends StatelessWidget {
     final DetailPageController controller = Get.put(DetailPageController());
     var data = Get.arguments;
     if(data[0] == 'Food'){
+      print(data[1]);
       controller.getFoodDetails();
     } else {
-
+      print(data[1]);
+      controller.getDrinkDetails();
     }
 
     return Obx(() => controller.isLoaded.value == true ? Scaffold(
@@ -70,7 +72,7 @@ class DetailsPage extends StatelessWidget {
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(controller.foodDetails.meals[0].strMealThumb)
+                    image: NetworkImage(data[0] == 'Food' ? controller.foodDetails.meals[0].strMealThumb : controller.drinkDetails.drinks[0].strDrinkThumb ?? "")
                 )
               // color: Colors.yellow
             ),
@@ -145,6 +147,7 @@ class DetailsPage extends StatelessWidget {
   }
 
   ingredientTab(DetailPageController controller){
+    var data = Get.arguments;
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: Column(
@@ -188,42 +191,100 @@ class DetailsPage extends StatelessWidget {
           ),
           Divider(color: Colors.black38,),
           Expanded(
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: [
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient1, controller.foodDetails.meals[0].strMeasure1, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient2, controller.foodDetails.meals[0].strMeasure2, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient3, controller.foodDetails.meals[0].strMeasure3, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient4, controller.foodDetails.meals[0].strMeasure4, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient5, controller.foodDetails.meals[0].strMeasure5, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient6, controller.foodDetails.meals[0].strMeasure6, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient7, controller.foodDetails.meals[0].strMeasure7, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient8, controller.foodDetails.meals[0].strMeasure8, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient9, controller.foodDetails.meals[0].strMeasure9, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient10, controller.foodDetails.meals[0].strMeasure10, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient11, controller.foodDetails.meals[0].strMeasure11, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient12, controller.foodDetails.meals[0].strMeasure12, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient13, controller.foodDetails.meals[0].strMeasure13, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient14, controller.foodDetails.meals[0].strMeasure14, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient15, controller.foodDetails.meals[0].strMeasure15, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient16, controller.foodDetails.meals[0].strMeasure16, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient17, controller.foodDetails.meals[0].strMeasure17, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient18, controller.foodDetails.meals[0].strMeasure18, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient19, controller.foodDetails.meals[0].strMeasure19, controller),
-                  ingredientBar(controller.foodDetails.meals[0].strIngredient20, controller.foodDetails.meals[0].strMeasure20, controller),
-                ],
-              ),
-            ),
+            child: data[0] == 'Food' ? mealIngredientList(controller) : drinkIngredientList(controller)
+            // SingleChildScrollView(
+            //   child: Wrap(
+            //     children: [
+            //       //Food details
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient1, controller.foodDetails.meals[0].strMeasure1, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient2, controller.foodDetails.meals[0].strMeasure2, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient3, controller.foodDetails.meals[0].strMeasure3, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient4, controller.foodDetails.meals[0].strMeasure4, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient5, controller.foodDetails.meals[0].strMeasure5, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient6, controller.foodDetails.meals[0].strMeasure6, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient7, controller.foodDetails.meals[0].strMeasure7, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient8, controller.foodDetails.meals[0].strMeasure8, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient9, controller.foodDetails.meals[0].strMeasure9, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient10, controller.foodDetails.meals[0].strMeasure10, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient11, controller.foodDetails.meals[0].strMeasure11, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient12, controller.foodDetails.meals[0].strMeasure12, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient13, controller.foodDetails.meals[0].strMeasure13, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient14, controller.foodDetails.meals[0].strMeasure14, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient15, controller.foodDetails.meals[0].strMeasure15, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient16, controller.foodDetails.meals[0].strMeasure16, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient17, controller.foodDetails.meals[0].strMeasure17, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient18, controller.foodDetails.meals[0].strMeasure18, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient19, controller.foodDetails.meals[0].strMeasure19, controller),
+            //       ingredientBar(controller.foodDetails.meals[0].strIngredient20, controller.foodDetails.meals[0].strMeasure20, controller),
+            //     ],
+            //   ),
+            // ),
           )
         ],
       ),
     );
   }
 
+  Widget mealIngredientList(DetailPageController controller) {
+    return SingleChildScrollView(
+      child: Wrap(
+        children: [
+          //Food details
+          ingredientBar(controller.foodDetails.meals[0].strIngredient1, controller.foodDetails.meals[0].strMeasure1, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient2, controller.foodDetails.meals[0].strMeasure2, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient3, controller.foodDetails.meals[0].strMeasure3, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient4, controller.foodDetails.meals[0].strMeasure4, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient5, controller.foodDetails.meals[0].strMeasure5, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient6, controller.foodDetails.meals[0].strMeasure6, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient7, controller.foodDetails.meals[0].strMeasure7, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient8, controller.foodDetails.meals[0].strMeasure8, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient9, controller.foodDetails.meals[0].strMeasure9, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient10, controller.foodDetails.meals[0].strMeasure10, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient11, controller.foodDetails.meals[0].strMeasure11, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient12, controller.foodDetails.meals[0].strMeasure12, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient13, controller.foodDetails.meals[0].strMeasure13, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient14, controller.foodDetails.meals[0].strMeasure14, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient15, controller.foodDetails.meals[0].strMeasure15, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient16, controller.foodDetails.meals[0].strMeasure16, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient17, controller.foodDetails.meals[0].strMeasure17, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient18, controller.foodDetails.meals[0].strMeasure18, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient19, controller.foodDetails.meals[0].strMeasure19, controller),
+          ingredientBar(controller.foodDetails.meals[0].strIngredient20, controller.foodDetails.meals[0].strMeasure20, controller),
+        ],
+      ),
+    );
+  }
+
+  Widget drinkIngredientList(DetailPageController controller) {
+    return SingleChildScrollView(
+      child: Wrap(
+        children: [
+          //Food details
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient1 ?? "", controller.drinkDetails.drinks[0].strMeasure1 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient2 ?? "", controller.drinkDetails.drinks[0].strMeasure2 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient3 ?? "", controller.drinkDetails.drinks[0].strMeasure3 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient4 ?? "", controller.drinkDetails.drinks[0].strMeasure4 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient5 ?? "", controller.drinkDetails.drinks[0].strMeasure5 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient6 ?? "", controller.drinkDetails.drinks[0].strMeasure6 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient7 ?? "", controller.drinkDetails.drinks[0].strMeasure7 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient8 ?? "", controller.drinkDetails.drinks[0].strMeasure8 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient9 ?? "", controller.drinkDetails.drinks[0].strMeasure9 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient10 ?? "", controller.drinkDetails.drinks[0].strMeasure10 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient11 ?? "", controller.drinkDetails.drinks[0].strMeasure11 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient12 ?? "", controller.drinkDetails.drinks[0].strMeasure12 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient13 ?? "", controller.drinkDetails.drinks[0].strMeasure13 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient14 ?? "", controller.drinkDetails.drinks[0].strMeasure14 ?? "", controller),
+          ingredientBar(controller.drinkDetails.drinks[0].strIngredient15 ?? "", controller.drinkDetails.drinks[0].strMeasure15 ?? "", controller),
+        ],
+      ),
+    );
+  }
+
   stepsTab(DetailPageController controller){
+    var data = Get.arguments;
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10),
-      child: SingleChildScrollView(child: Text(controller.foodDetails.meals[0].strInstructions)),
+      child: SingleChildScrollView(child: Text(data == 'Food' ? controller.foodDetails.meals[0].strInstructions : controller.drinkDetails.drinks[0].strInstructions ?? "No instruction")),
     );
   }
 
